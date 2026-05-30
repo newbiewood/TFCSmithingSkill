@@ -12,8 +12,6 @@ Adds a TFC+-style smithing skill system for TerraFirmaCraft 4.1.2 (NeoForge 1.21
 |-----|------|-------------|
 | TerraFirmaCraft 4.1.2 | compile | Core mod |
 | Patchouli | compile | TFC handbook |
-| Moonlight | runtime | Dummy dependency |
-| Dummy | runtime | Debug dummy |
 
 ---
 

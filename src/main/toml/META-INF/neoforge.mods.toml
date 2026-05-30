@@ -42,11 +42,18 @@ displayName="${mod_name}" #mandatory
 #credits="" #optional
 
 # The authors of the mod, displayed in the mod UI (optional)
-#authors=""
+authors="${mod_authors}"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Example mod description.
+Adds a TFC+-style smithing skill system to TerraFirmaCraft (NeoForge 1.21.1).
+
+Features:
+- Four smithing skills: General, Tool, Weapon, Armor
+- XP progression with rank tiers (Novice/Adept/Expert/Master)
+- Skill affects quality threshold, damage, mining speed, and durability
+- Cross-mod API for other mods to integrate
+- Configurable via tfcs-server.toml
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

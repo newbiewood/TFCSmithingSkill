@@ -1,0 +1,51 @@
+# Loader metadata
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "EUPL-1.2"
+issueTrackerURL = "https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues"
+
+# TFC
+[[mods]]
+    modId = "tfc"
+    version = "4.1.2"
+    displayName = "TerraFirmaCraft"
+    credits = "By AlcatrazEscapee, Disastermoo, Dries007, Bunsan, Claycorp, DavidTriphon, EERussianguy, Gaelmare, and many others. Based on the original work by Bioxx, Dunk, and Kitty. Music by Mike \"Menoch\" Pelaez"
+    authors = "AlcatrazEscapee"
+    description = '''TerraFirmaCraft - The Next Generation'''
+    enumExtensions = "META-INF/enumextensions.json"
+
+# Dependencies
+[[dependencies.tfc]]
+    modId = "patchouli"
+    type = "required"
+    versionRange = "[1.21.1-92-NEOFORGE,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.tfc]]
+    modId = "jei"
+    type = "optional"
+    versionRange = "[19.25.0.321,)"
+    ordering = "NONE"
+    side = "CLIENT"
+
+[[dependencies.tfc]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1.197,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[dependencies.tfc]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[1.21.1]"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[mixins]]
+    config = "tfc.mixins.json"
+
+# We do our own biome coloring, see #2279
+[mods."sodium:options"]
+    "mixin.features.render.world.sky"=false

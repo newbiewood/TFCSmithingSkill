@@ -8,12 +8,14 @@ import com.nbw.tfc.skill.network.SyncSkillPacket;
 import net.dries007.tfc.common.blockentities.AnvilBlockEntity;
 import net.dries007.tfc.common.component.forge.ForgingBonus;
 import net.dries007.tfc.common.component.forge.ForgingBonusComponent;
+import net.dries007.tfc.common.component.forge.ForgingCapability;
 import net.dries007.tfc.common.component.forge.ForgeStep;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +32,10 @@ public abstract class AnvilBlockEntityMixin {
     @Unique
     private SkillDef tfcs$lastSpecialist;
     @Unique
+    private boolean tfcs$hadForgingItem;
+    @Unique
+    private Item tfcs$preWorkItem;
+    @Unique
     private Float tfcs$weldExtra;
     @Unique
     private String tfcs$weldRank;
@@ -42,6 +48,18 @@ public abstract class AnvilBlockEntityMixin {
             INVENTORY_FIELD.setAccessible(true);
         } catch (Exception e) {
             throw new RuntimeException("Failed to find inventory field", e);
+        }
+    }
+
+    @Inject(method = "work", at = @At("HEAD"))
+    private void onWorkHead(ServerPlayer player, ForgeStep step, CallbackInfo ci) {
+        try {
+            ItemStack input = ((IItemHandlerModifiable) INVENTORY_FIELD.get(this)).getStackInSlot(0);
+            tfcs$hadForgingItem = ForgingCapability.get(input) != null;
+            tfcs$preWorkItem = input.getItem();
+        } catch (Exception e) {
+            tfcs$hadForgingItem = false;
+            tfcs$preWorkItem = null;
         }
     }
 
@@ -59,22 +77,32 @@ public abstract class AnvilBlockEntityMixin {
         SkillDef specialist = tfcs$lastSpecialist;
         tfcs$lastSpecialist = null;
 
+        boolean forgingJustCompleted = false;
+        try {
+            ItemStack result = ((IItemHandlerModifiable) INVENTORY_FIELD.get(this)).getStackInSlot(0);
+            if (tfcs$hadForgingItem && !result.isEmpty()) {
+                boolean capabilityCleared = ForgingCapability.get(result) == null;
+                boolean itemChanged = result.getItem() != tfcs$preWorkItem;
+                forgingJustCompleted = capabilityCleared || itemChanged;
+            }
+        } catch (Exception ignored) {}
+        tfcs$preWorkItem = null;
+
+        if (forgingJustCompleted && ServerConfig.INSTANCE.grantXp.get()) {
+            TFCSewingAPI.grantXp(player, specialist);
+            PacketDistributor.sendToPlayer(player, new SyncSkillPacket(SkillAttachments.get(player)));
+        }
+
         ItemStack result = ItemStack.EMPTY;
         try {
             result = ((IItemHandlerModifiable) INVENTORY_FIELD.get(this)).getStackInSlot(0);
         } catch (Exception ignored) {}
 
-        if (result.isEmpty()) return;
-        ForgingBonus bonus = ForgingBonusComponent.get(result);
-        if (bonus == ForgingBonus.NONE) return;
-
-        if (ServerConfig.INSTANCE.grantXp.get()) {
-            TFCSewingAPI.grantXp(player, specialist);
-            PacketDistributor.sendToPlayer(player, new SyncSkillPacket(SkillAttachments.get(player)));
-        }
-
-        if (ServerConfig.INSTANCE.applySkillExtra.get()) {
-            TFCSewingAPI.applySkillBonuses(result, player, specialist);
+        if (!result.isEmpty() && ServerConfig.INSTANCE.applySkillExtra.get()) {
+            ForgingBonus bonus = ForgingBonusComponent.get(result);
+            if (bonus != ForgingBonus.NONE) {
+                TFCSewingAPI.applySkillBonuses(result, player, specialist);
+            }
         }
     }
 

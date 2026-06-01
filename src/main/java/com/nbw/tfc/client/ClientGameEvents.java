@@ -53,7 +53,11 @@ public class ClientGameEvents {
                 if (tips.get(i).getString().contains(author)) {
                     MutableComponent newLine = Component.literal(
                         typeName.getString() + " by [" + abbr + " " + (rank != null ? rank : "?") + "] " + author);
-                    newLine = newLine.withStyle(tips.get(i).getStyle());
+                    if (isMaster) {
+                        newLine = newLine.withStyle(ChatFormatting.LIGHT_PURPLE);
+                    } else {
+                        newLine = newLine.withStyle(tips.get(i).getStyle());
+                    }
                     tips.set(i, newLine);
                     break;
                 }
@@ -66,11 +70,7 @@ public class ClientGameEvents {
         } else {
             line = Component.literal("Skill: " + pct);
         }
-        if (isMaster) {
-            line = line.withStyle(Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE).withItalic(true));
-        } else {
-            line = line.withColor(0xFF_D0A000);
-        }
+        line = line.withColor(0xFF_D0A000);
         event.getToolTip().add(line);
     }
 

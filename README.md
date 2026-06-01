@@ -71,12 +71,20 @@ effectiveRatio = ratio / skillMult
 | Crafting table | Copy best (input → output) |
 | Welding | Copy best (higher skillExtra of two inputs) |
 
+### 经验授予 / XP Granting
+
+XP is granted on **every** anvil recipe completion — not limited to tool/weapon/armor recipes.
+
+- `gensmith` XP is always granted on forge complete (1 XP per completion).
+- Specialist XP (toolsmith / weaponsmith / armorsmith) is granted in addition when the output matches a specialist rule.
+- A forge is detected as complete when **either**: the `ForgingCapability` is cleared on the result, **or** the item type in slot 0 has changed (catches intermediate products like sheets that retain forging capability for further working).
+
 ---
 
 ## GUI
 
 - **Anvil**: Gold text `Skill: 1.27 (Master)` at `(leftPos+105, topPos+6)`, 0.7x scale
-- **Tooltip**: TFC quality line replaced to `Well Forged by [T.S. Expert] Dev`; extra line `Skill: +45.0%`; Master rank uses `LIGHT_PURPLE + italic`
+- **Tooltip**: TFC quality line replaced to `Well Forged by [T.S. Expert] Dev`; Master rank line uses `LIGHT_PURPLE` (no italic); extra line `Skill: +45.0%` in gold `0xD0A000` (uniform across all ranks)
 - **Skill Tab**: Anvil icon button on inventory right side → opens SkillScreen with 4 skill progress bars, rank, skillMult, skillExtra
 
 ---
@@ -274,7 +282,7 @@ src/main/java/com/nbw/tfc/
 │   ├── PlayerEvents.java              # Login/respawn skill sync
 │   └── SkillBonusEvents.java          # BreakSpeed / LivingHurt / Craft / Attribute
 ├── mixin/
-│   ├── AnvilBlockEntityMixin.java     # Ratio fix + XP + bonus + weld copy
+│   ├── AnvilBlockEntityMixin.java     # Ratio fix + forge-complete detect (item-type) + XP + bonus + weld copy
 │   └── ItemStackMixin.java            # Item serialization
 └── skill/
     ├── SkillAttachments.java          # NeoForge AttachmentType registration
@@ -294,8 +302,9 @@ src/main/java/com/nbw/tfc/
 
 | Mixin | Method | Type | Purpose |
 |-------|--------|------|---------|
+| `AnvilBlockEntityMixin` | `work()` | `@Inject(HEAD)` | Capture input item type + forging capability for completion detection |
 | `AnvilBlockEntityMixin` | `work()` | `@ModifyVariable` | `ratio = ratio / skillMult` |
-| `AnvilBlockEntityMixin` | `work()` | `@Inject(RETURN)` | XP grant + skill data storage + MAX_DAMAGE |
+| `AnvilBlockEntityMixin` | `work()` | `@Inject(RETURN)` | Detect forge complete (capability cleared **OR** item type changed) → XP grant + skill bonus + MAX_DAMAGE |
 | `AnvilBlockEntityMixin` | `weld()` | `@Inject(HEAD)` | Capture weld input skill components |
 | `AnvilBlockEntityMixin` | `weld()` | `@Inject(RETURN)` | Copy best skill component to weld output |
 

@@ -11,10 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 
 public class SkillBonusEvents {
 
@@ -26,20 +23,6 @@ public class SkillBonusEvents {
         Float skillExtra = stack.get(SkillComponents.SKILL_EXTRA.get());
         if (skillExtra != null && skillExtra > 0f) {
             event.setNewSpeed(event.getNewSpeed() * (1f + skillExtra));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onLivingHurt(LivingIncomingDamageEvent event) {
-        if (!ServerConfig.INSTANCE.applySkillExtra.get()) return;
-        Entity attacker = event.getSource().getEntity();
-        if (attacker instanceof LivingEntity living) {
-            ItemStack stack = living.getMainHandItem();
-            if ("skill.tfcsmithingskill.armorsmith".equals(stack.get(SkillComponents.SKILL_TYPE.get()))) return;
-            Float skillExtra = stack.get(SkillComponents.SKILL_EXTRA.get());
-            if (skillExtra != null && skillExtra > 0f) {
-                event.setAmount(event.getAmount() * (1f + skillExtra));
-            }
         }
     }
 

@@ -1,0 +1,26 @@
+=== TFCSmithingSkill Changelog ===
+
+---
+
+### v1.0.3 (2026-06-22)
+
+- Restyled skill GUI to TFC style: centered light-gray panel, dark text, gold progress bars, clearer title
+- Reduced GUI text scale and reorganized skill name, rank, XP, multiplier, extra values to prevent overlap
+- Removed duplicate skill damage scaling: deleted the extra LivingIncomingDamageEvent multiplier, keeping only the attribute modifier
+- Perfect + Master attack scaling corrected from ~4.34x to the intended ~2.55x
+- Mining speed bonus logic preserved unchanged
+- Forge XP changed from flat 1 to random 1~3 per craft
+
+---
+
+### v1.0.2 (2026-06-11)
+
+- Fixed Master quality tooltip font color: author line now correctly displays LIGHT_PURPLE instead of inheriting wrong styles
+- Fixed Master quality Skill line display: unified to gold #D0A000, removed conflicting purple italic style from Master rank
+
+---
+
+### v1.0.1
+
+- Fix General Smithing XP not granted for non-tool/weapon/armor recipes (e.g., ingot → sheet)
+- Forge-completion detection now also triggers on item type change

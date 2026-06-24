@@ -308,8 +308,6 @@ src/main/java/com/nbw/tfc/
 | `AnvilBlockEntityMixin` | `weld()` | `@Inject(HEAD)` | Capture weld input skill components |
 | `AnvilBlockEntityMixin` | `weld()` | `@Inject(RETURN)` | Copy best skill component to weld output |
 
----
-
 ## 已知限制 / Known Limitations
 
 - **Durability mixin unimplemented**: Only flat max durability boost; no probabilistic durability saving (requires `@WrapOperation(priority=1001)` with MixinExtras refMap support)

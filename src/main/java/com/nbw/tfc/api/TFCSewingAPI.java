@@ -89,9 +89,10 @@ public final class TFCSewingAPI {
     public static void grantXp(ServerPlayer player, SkillDef specialist) {
         if (!ServerConfig.INSTANCE.grantXp.get()) return;
         SkillData data = SkillAttachments.get(player);
-        data.addXp(SkillDef.GENSMITH, 1);
+        int amount = 1 + player.getRandom().nextInt(3); // 1~3
+        data.addXp(SkillDef.GENSMITH, amount);
         if (specialist != null) {
-            data.addXp(specialist, 1);
+            data.addXp(specialist, amount);
         }
     }
 

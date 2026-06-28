@@ -113,6 +113,9 @@ configurations {
 dependencies {
     implementation files("libs/TerraFirmaCraft-NeoForge-1.21.1-4.1.2.jar")
     implementation files("libs/Patchouli-1.21.1-93-NEOFORGE.jar")
+    localRuntime files("libs/tfc_metal_tools-1.21.1-neoforge-1.0.7.jar")
+    localRuntime files("libs/TFC-items-1.21.1-neoforge-1.2.1.jar")
+    localRuntime files("libs/jei-1.21.1-neoforge-19.27.0.336.jar")
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
 

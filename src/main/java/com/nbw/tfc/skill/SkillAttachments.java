@@ -15,7 +15,7 @@ public class SkillAttachments {
 
     public static final Supplier<AttachmentType<SkillData>> SKILL_DATA = ATTACHMENTS.register(
         "skill_data",
-        () -> AttachmentType.serializable(SkillData::new).build()
+        () -> AttachmentType.serializable(SkillData::new).copyOnDeath().build()
     );
 
     public static void register(IEventBus bus) {

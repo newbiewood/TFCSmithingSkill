@@ -2,6 +2,13 @@
 
 ---
 
+### v1.0.4 (2026-06-28)
+
+- Fixed skill XP being reset to zero on player death: added `.copyOnDeath()` to `SkillAttachments` attachment type
+- Fixed CraftTweaker item-based recipes not transferring skill attributes to crafted output: added fallback scan from player's open CraftingMenu container slots
+
+---
+
 ### v1.0.3 (2026-06-22)
 
 - Restyled skill GUI to TFC style: centered light-gray panel, dark text, gold progress bars, clearer title

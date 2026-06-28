@@ -5,9 +5,11 @@ import com.nbw.tfc.skill.SkillComponents;
 import com.nbw.tfc.skill.config.ServerConfig;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
@@ -66,6 +68,18 @@ public class SkillBonusEvents {
                 bestExtra = f;
                 bestRank = input.get(SkillComponents.SKILL_RANK.get());
                 bestType = input.get(SkillComponents.SKILL_TYPE.get());
+            }
+        }
+        if (bestExtra == null && event.getEntity() instanceof ServerPlayer sp
+            && sp.containerMenu instanceof CraftingMenu menu) {
+            for (int i = 0; i < menu.craftSlots.getContainerSize(); i++) {
+                ItemStack input = menu.craftSlots.getItem(i);
+                Float f = input.get(SkillComponents.SKILL_EXTRA.get());
+                if (f != null && (bestExtra == null || f > bestExtra)) {
+                    bestExtra = f;
+                    bestRank = input.get(SkillComponents.SKILL_RANK.get());
+                    bestType = input.get(SkillComponents.SKILL_TYPE.get());
+                }
             }
         }
         if (bestExtra != null && bestExtra > 0f) {
